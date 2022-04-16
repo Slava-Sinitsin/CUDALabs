@@ -10,7 +10,7 @@ void filling(double *a, int n) {
     }
 }
 
-__global__ void getDet(double *a, const int *N, const int *shift, const int *level) {
+__global__ void div(double *a, const int *N, const int *shift, const int *level) {
     int i = threadIdx.x;
     int j = *N - threadIdx.y - 1;
     a[i * (*N) + j + (*shift) + i * (*level)] /= a[i * (*N) + (*shift) + i * (*level)];
@@ -52,7 +52,7 @@ double detCalc(double *a, int N) {
         cudaMemcpy(level_d, &level, sizeof(int), cudaMemcpyHostToDevice);
         mult <<<1, dim3(1, 1, 1) >>>(a_d, N_d, shift_d, level_d, answer_d);
         cudaDeviceSynchronize();
-        getDet <<<8, dim3(dailySize, dailySize, 1) >>>(a_d, N_d, shift_d, level_d);
+        div <<<8, dim3(dailySize, dailySize, 1) >>>(a_d, N_d, shift_d, level_d);
         cudaDeviceSynchronize();
         sub <<<8, dim3(dailySize - 1, dailySize, 1) >>>(a_d, N_d, shift_d, level_d);
         cudaDeviceSynchronize();
