@@ -4,12 +4,6 @@
 #include <cstdlib>
 #include <ctime>
 
-void filling(double *a, int n) {
-    for (int i = 0; i < n * n; i++) {
-        a[i] = rand() % 9 + 1;
-    }
-}
-
 __global__ void div(double *a, const int *N, const int *shift, const int *level) {
     int i = threadIdx.x;
     int j = *N - threadIdx.y - 1;
@@ -25,6 +19,12 @@ __global__ void sub(double *a, const int *N, const int *shift, const int *level)
 __global__ void mult(double *a, int *N, const int *shift, const int *level, double *answer) {
     for (int i = 0; i < *N; i++) {
         (*answer) *= a[i * (*N) + (*shift) + i * (*level)];
+    }
+}
+
+void filling(double *a, int n) {
+    for (int i = 0; i < n * n; i++) {
+        a[i] = rand() % 9 + 1;
     }
 }
 
